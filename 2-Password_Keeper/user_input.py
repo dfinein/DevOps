@@ -158,13 +158,13 @@ class Menu_Box:
                         self.screen_color[y_start+3+i][x_start+1+j] = color
                     if  (j < len(options[i])):
                         self.screen[y_start+3+i][x_start+1+j] = options[i][j]
-                        if i == 0:
+                        if i == 1000:
                            self.screen_color[y_start+3+i][x_start+1+j] = self.invert_color(color) 
                         else:
                             self.screen_color[y_start+3+i][x_start+1+j] = color
                     else:
                         self.screen[y_start+3+i][x_start+1+j] = ' '
-                        if i == 0:
+                        if i == 1000:
                             self.screen_color[y_start+3+i][x_start+1+j] = self.invert_color(color)
                         else:
                             self.screen_color[y_start+3+i][x_start+1+j] = color
@@ -198,7 +198,10 @@ class Menu_Box:
 
     def get_input(self):
         old_input = ''
-        print(self.box_options[self.selected]['options'][self.box_options[self.selected]['selected']])
+        for i in range(0,self.box_options[self.selected]['x_size']-1):
+            self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i] = \
+                self.invert_color(self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i])
+        self.display()
         while True:
             usr_input = getch.getch()
             if old_input == '[':
@@ -224,17 +227,45 @@ class Menu_Box:
                             self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i] = \
                                 self.invert_color(self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i])
                             self.display()
+                elif usr_input == 'C':
+                    for i in range(0,self.box_options[self.selected]['x_size']-1):
+                        self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i] = \
+                            self.invert_color(self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i])
+                    temp = list(self.box_options)
+                    try:
+                        self.selected = temp[temp.index(self.selected) + 1]
+                        if self.selected == 'title':
+                            self.selected = temp[temp.index(self.selected) - 1]
+                    except (ValueError,IndexError):
+                        pass
+                    for i in range(0,self.box_options[self.selected]['x_size']-1):
+                        self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i] = \
+                            self.invert_color(self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i])
+                    self.display()
+                elif usr_input == 'D':
+                    for i in range(0,self.box_options[self.selected]['x_size']-1):
+                        self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i] = \
+                            self.invert_color(self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i])
+                    temp = list(self.box_options)
+                    try:
+                        self.selected = temp[temp.index(self.selected) - 1]
+                        if self.selected == 'title':
+                            self.selected = temp[temp.index(self.selected) + 1]
+                    except (ValueError,IndexError):
+                        pass
+                    for i in range(0,self.box_options[self.selected]['x_size']-1):
+                        self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i] = \
+                            self.invert_color(self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i])
+                    self.display()
+                     
             old_input = usr_input
-            if usr_input == '\n' or usr_input == '\t':
-                pass
+            if usr_input == '\n':
+                print(self.box_options[self.selected]['options'][self.box_options[self.selected]['selected']])
 
             elif usr_input == 'q':
                 sys.stdout.write("\033[?25h")
                 sys.stdout.flush()
                 print(self.box_options[self.selected]['options'][self.box_options[self.selected]['selected']])
-                for i in self.box_options:
-                    if i != 'Password Manager':
-                        print(i)
                 break
 
 if __name__ == "__main__":
@@ -242,5 +273,4 @@ if __name__ == "__main__":
     box = Menu_Box(80,40, title=title, color=BLUE)
     box.add_box(1,3,10,35,"Test",['one','two','three','four'], color=GREEN)
     box.add_box(12,3,15,35,"Second One",['opt 1','opt 2','opt 3','opt 4','opt 5','opt 6'], color=PINK)
-    box.display()
     box.get_input()
