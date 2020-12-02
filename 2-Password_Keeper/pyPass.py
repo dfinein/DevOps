@@ -1,5 +1,7 @@
 from Crypto.Cipher import AES
 import json
+import os
+from getpass import getpass
 
 
 class Passwords:
@@ -10,6 +12,7 @@ class Passwords:
         else:
             while len(password) < 16:
                 password += ' '
+    
         if len(user_iv) > 32:
             iv = user_iv[0:32]
         elif len(user_iv) > 24:
@@ -37,13 +40,50 @@ class Passwords:
         ciphertext = self.aes.encrypt(cleartext)
         return ciphertext
 
-class Reader:
-    def __init__(self, pw_file):
-        raw_database = ""
+class Database:
+    def find_by_cli(self):
+        while True:
+            user_input = input('Database File:  ')
+            try:
+                f = open(user_input,'rb')
+                f.close()
+                break
+            except FileNotFoundError:
+                continue
+        self.file = user_input
+
+    def open_db(self, password, iv="", pw_file=""):
+        if pw_file == "":
+            pw_file = self.file
         try:
-            with open(pw_file,'r') as file:
-                for line in file:
-                    raw_database += line
+            with open(pw_file,'rb') as file:
+                ct = file.read()
         except FileNotFoundError:
             print('File Not Found')
-        self.database = json.loads(raw_database)
+
+        decrypter = Passwords(password, iv)
+        pt = decrypter.decrypt(ct)
+        del decrypter
+        self.db = json.loads(pt)
+
+def pager(json_dict, tab=0):
+    result = ""
+    if type(json_dict) == dict:
+        for i in json_dict:
+            print(" "*tab + i)
+            pager(json_dict[i], tab+1)
+    elif type(json_dict) == list:
+        for i in json_dict:
+            pager(i, tab+1)
+    else:
+        print(" "*tab + json_dict)
+
+
+if __name__ == "__main__":
+    db = Database()
+    db.find_by_cli()
+    user_password = getpass("Database Password:  ")
+    user_iv = getpass("IV Key:")
+    db.open_db(user_password, user_iv)
+    print(db.db)
+

@@ -210,7 +210,6 @@ class Menu_Box:
                         for i in range(0,self.box_options[self.selected]['x_size']-1):
                             self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i] = \
                                 self.invert_color(self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i])
-                            self.display()
                         self.box_options[self.selected]['selected'] -= 1
                         for i in range(0,self.box_options[self.selected]['x_size']-1):
                             self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i] = \
@@ -221,7 +220,6 @@ class Menu_Box:
                         for i in range(0,self.box_options[self.selected]['x_size']-1):
                             self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i] = \
                                 self.invert_color(self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i])
-                            self.display()
                         self.box_options[self.selected]['selected'] += 1
                         for i in range(0,self.box_options[self.selected]['x_size']-1):
                             self.screen_color[self.box_options[self.selected]['y_start']+self.box_options[self.selected]['selected']][self.box_options[self.selected]['x_start']+i] = \
@@ -270,7 +268,7 @@ class Menu_Box:
 
 if __name__ == "__main__":
     title = "Password Manager"
-    box = Menu_Box(80,40, title=title, color=BLUE)
-    box.add_box(1,3,10,35,"Test",['one','two','three','four'], color=GREEN)
-    box.add_box(12,3,15,35,"Second One",['opt 1','opt 2','opt 3','opt 4','opt 5','opt 6'], color=PINK)
+    box = Menu_Box(80,30, title=title, color=BLUE)
+    box.add_box(1,3,10,25,"Test",['one','two','three','four'], color=GREEN)
+    box.add_box(12,3,15,25,"Second One",['opt 1','opt 2','opt 3','opt 4','opt 5','opt 6'], color=PINK)
     box.get_input()
